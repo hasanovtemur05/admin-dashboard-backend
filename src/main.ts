@@ -12,21 +12,31 @@ async function bootstrap() {
     const configService = app.get(ConfigService);
 
     app.setGlobalPrefix('api');
+
     app.useGlobalPipes(
         new ValidationPipe({
             transform: true,
             whitelist: true,
             forbidNonWhitelisted: true,
-            transformOptions: { enableImplicitConversion: true },
+            transformOptions: {
+                enableImplicitConversion: true,
+            },
         }),
     );
+
     app.useGlobalFilters(new GlobalExceptionFilter());
-    app.useGlobalInterceptors(new LoggingInterceptor(), new ResponseInterceptor());
+
+    app.useGlobalInterceptors(
+        new LoggingInterceptor(),
+        new ResponseInterceptor(),
+    );
 
     setupSwagger(app);
 
     const port = configService.get<number>('port') || 3000;
-    await app.listen(port);
+
+    await app.listen(port, '0.0.0.0');
+
     console.log(`Application is running on: http://localhost:${port}/api`);
 }
 
