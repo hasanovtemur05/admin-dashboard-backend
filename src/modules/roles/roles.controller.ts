@@ -1,7 +1,9 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import { RolesService } from './roles.service';
 import { CreateRoleDto } from './dto/create-role.dto';
 
+@ApiBearerAuth('JWT-auth')
 @Controller('roles')
 export class RolesController {
     constructor(private readonly rolesService: RolesService) {}
