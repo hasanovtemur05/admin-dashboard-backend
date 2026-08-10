@@ -4,7 +4,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 
 @Injectable()
 export class UsersRepository {
-    constructor(private readonly prismaRepository: PrismaRepository) {}
+    constructor(private readonly prismaRepository: PrismaRepository) { }
 
     findByUsername(username: string) {
         return this.prismaRepository.prisma.user.findUnique({ where: { username }, include: { role: true } });
@@ -27,6 +27,13 @@ export class UsersRepository {
                 email: data.email,
                 password: data.password,
             },
+        });
+    }
+
+    updatePassword(id: number, password: string) {
+        return this.prismaRepository.prisma.user.update({
+            where: { id },
+            data: { password },
         });
     }
 }

@@ -22,4 +22,8 @@ export class UsersService {
     async create(data: CreateUserDto) {
         return this.usersRepository.create(data);
     }
+
+    async updatePassword(id: number, password: string) {
+        return this.usersRepository.updatePassword(id, password);
+    }
 }
