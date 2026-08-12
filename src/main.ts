@@ -12,8 +12,15 @@ async function bootstrap() {
     const configService = app.get(ConfigService);
 
     app.setGlobalPrefix('api');
-    app.enableCors();
 
+    // Enable CORS
+    app.enableCors({
+        origin: process.env.CORS_ORIGIN || '*',
+        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+        credentials: true,
+    });
+
+    // Global pipes
     app.useGlobalPipes(
         new ValidationPipe({
             transform: true,
@@ -25,13 +32,16 @@ async function bootstrap() {
         }),
     );
 
+    // Global filters
     app.useGlobalFilters(new GlobalExceptionFilter());
 
+    // Global interceptors
     app.useGlobalInterceptors(
         new LoggingInterceptor(),
         new ResponseInterceptor(),
     );
 
+    // Swagger documentation
     setupSwagger(app);
 
     const port = configService.get<number>('port') || 3000;
@@ -39,6 +49,7 @@ async function bootstrap() {
     await app.listen(port, '0.0.0.0');
 
     console.log(`Application is running on: http://localhost:${port}/api`);
+    console.log(`Swagger documentation: http://localhost:${port}/api/docs`);
 }
 
 bootstrap();

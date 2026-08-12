@@ -1,6 +1,7 @@
 import { Injectable, UnauthorizedException, ConflictException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import * as bcrypt from 'bcrypt';
 import { UsersService } from '../users/users.service';
 import { LoginDto } from './dto/login.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
@@ -14,45 +15,83 @@ export class AuthService {
         private readonly configService: ConfigService,
     ) {}
 
-    async validateUser(username: string, password: string) {
-        const user = await this.usersService.findByUsername(username);
-        if (!user || user.password !== password) {
-            return null;
-        }
+    async validateUser(phone: string, password: string) {
+        const user = await this.usersService.findByPhone(phone);
+        if (!user) return null;
+
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        if (!isPasswordValid) return null;
+
         return user;
     }
 
     async login(loginDto: LoginDto) {
-        const user = await this.validateUser(loginDto.username, loginDto.password);
+        const user = await this.validateUser(loginDto.phone, loginDto.password);
         if (!user) {
             throw new UnauthorizedException('Invalid credentials');
         }
 
-        const payload = { sub: user.id, username: user.username, roles: [user.role?.name] };
+        if (!user.isActive) {
+            throw new UnauthorizedException('Account is deactivated');
+        }
+
+        const payload = {
+            sub: user.id,
+            phone: user.phone,
+            role: user.role,
+        };
 
         return {
             accessToken: this.jwtService.sign(payload),
-            refreshToken: this.jwtService.sign(payload, { expiresIn: '7d' } as any),
+            refreshToken: this.jwtService.sign(payload, {
+                expiresIn: this.configService.get('jwt.refreshExpiresIn'),
+            }),
+            user: {
+                id: user.id,
+                phone: user.phone,
+                email: user.email,
+                name: user.name,
+                role: user.role,
+            },
         };
     }
 
     async register(createUserDto: CreateUserDto) {
-        const existingUser = await this.usersService.findByUsername(createUserDto.username);
+        const existingUser = await this.usersService.findByPhone(createUserDto.phone);
         if (existingUser) {
-            throw new ConflictException('Username already exists');
+            throw new ConflictException('Phone number already exists');
         }
 
-        const user = await this.usersService.create(createUserDto);
+        if (createUserDto.email) {
+            const existingEmail = await this.usersService.findByEmail(createUserDto.email);
+            if (existingEmail) {
+                throw new ConflictException('Email already exists');
+            }
+        }
 
-        const payload = { sub: user.id, username: user.username, roles: [] };
+        const hashedPassword = await bcrypt.hash(createUserDto.password, 12);
+        const user = await this.usersService.create({
+            ...createUserDto,
+            password: hashedPassword,
+        });
+
+        const payload = {
+            sub: user.id,
+            phone: user.phone,
+            role: user.role,
+        };
 
         return {
             accessToken: this.jwtService.sign(payload),
-            refreshToken: this.jwtService.sign(payload, { expiresIn: '7d' } as any),
+            refreshToken: this.jwtService.sign(payload, {
+                expiresIn: this.configService.get('jwt.refreshExpiresIn'),
+            }),
             user: {
                 id: user.id,
-                username: user.username,
+                phone: user.phone,
                 email: user.email,
+                name: user.name,
+                role: user.role,
             },
         };
     }
@@ -65,11 +104,21 @@ export class AuthService {
                 throw new UnauthorizedException('User not found');
             }
 
-            const newPayload = { sub: user.id, username: user.username, roles: payload.roles };
+            if (!user.isActive) {
+                throw new UnauthorizedException('Account is deactivated');
+            }
+
+            const newPayload = {
+                sub: user.id,
+                phone: user.phone,
+                role: user.role,
+            };
 
             return {
                 accessToken: this.jwtService.sign(newPayload),
-                refreshToken: this.jwtService.sign(newPayload, { expiresIn: '7d' } as any),
+                refreshToken: this.jwtService.sign(newPayload, {
+                    expiresIn: this.configService.get('jwt.refreshExpiresIn'),
+                }),
             };
         } catch {
             throw new UnauthorizedException('Invalid or expired refresh token');
@@ -82,11 +131,16 @@ export class AuthService {
             throw new UnauthorizedException('User not found');
         }
 
-        if (user.password !== changePasswordDto.currentPassword) {
+        const isPasswordValid = await bcrypt.compare(
+            changePasswordDto.currentPassword,
+            user.password,
+        );
+        if (!isPasswordValid) {
             throw new UnauthorizedException('Current password is incorrect');
         }
 
-        await this.usersService.updatePassword(userId, changePasswordDto.newPassword);
+        const hashedPassword = await bcrypt.hash(changePasswordDto.newPassword, 12);
+        await this.usersService.updatePassword(userId, hashedPassword);
 
         return { message: 'Password changed successfully' };
     }
@@ -99,8 +153,10 @@ export class AuthService {
 
         return {
             id: user.id,
-            username: user.username,
+            phone: user.phone,
             email: user.email,
+            name: user.name,
+            role: user.role,
             createdAt: user.createdAt,
             updatedAt: user.updatedAt,
         };
