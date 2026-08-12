@@ -4,85 +4,85 @@ import { CreateUserDto } from './dto/create-user.dto';
 
 @Injectable()
 export class UsersRepository {
-    constructor(private readonly prismaRepository: PrismaRepository) {}
+  constructor(private readonly prismaRepository: PrismaRepository) {}
 
-    findByPhone(phone: string) {
-        return this.prismaRepository.prisma.user.findUnique({
-            where: { phone },
-        });
+  findByPhone(phone: string) {
+    return this.prismaRepository.prisma.user.findUnique({
+      where: { phone },
+    });
+  }
+
+  findByEmail(email: string) {
+    return this.prismaRepository.prisma.user.findUnique({
+      where: { email },
+    });
+  }
+
+  findById(id: number) {
+    return this.prismaRepository.prisma.user.findUnique({ where: { id } });
+  }
+
+  findAll(query: { page?: number; limit?: number; search?: string }) {
+    const take = Number(query.limit ?? 20);
+    const skip = (Number(query.page ?? 1) - 1) * take;
+
+    const where: any = {};
+    if (query.search) {
+      where.OR = [
+        { phone: { contains: query.search } },
+        { email: { contains: query.search } },
+        { name: { contains: query.search } },
+      ];
     }
 
-    findByEmail(email: string) {
-        return this.prismaRepository.prisma.user.findUnique({
-            where: { email },
-        });
-    }
+    return this.prismaRepository.prisma.user.findMany({
+      where,
+      take,
+      skip,
+      select: {
+        id: true,
+        phone: true,
+        email: true,
+        name: true,
+        role: true,
+        isActive: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
 
-    findById(id: number) {
-        return this.prismaRepository.prisma.user.findUnique({ where: { id } });
-    }
+  create(data: CreateUserDto) {
+    return this.prismaRepository.prisma.user.create({
+      data: {
+        phone: data.phone,
+        email: data.email,
+        password: data.password,
+        name: data.name,
+        role: data.role,
+      },
+    });
+  }
 
-    findAll(query: { page?: number; limit?: number; search?: string }) {
-        const take = Number(query.limit ?? 20);
-        const skip = (Number(query.page ?? 1) - 1) * take;
+  updatePassword(id: number, password: string) {
+    return this.prismaRepository.prisma.user.update({
+      where: { id },
+      data: { password },
+    });
+  }
 
-        const where: any = {};
-        if (query.search) {
-            where.OR = [
-                { phone: { contains: query.search } },
-                { email: { contains: query.search } },
-                { name: { contains: query.search } },
-            ];
-        }
+  update(id: number, data: Partial<CreateUserDto>) {
+    return this.prismaRepository.prisma.user.update({
+      where: { id },
+      data,
+    });
+  }
 
-        return this.prismaRepository.prisma.user.findMany({
-            where,
-            take,
-            skip,
-            select: {
-                id: true,
-                phone: true,
-                email: true,
-                name: true,
-                role: true,
-                isActive: true,
-                createdAt: true,
-                updatedAt: true,
-            },
-            orderBy: { createdAt: 'desc' },
-        });
-    }
-
-    create(data: CreateUserDto) {
-        return this.prismaRepository.prisma.user.create({
-            data: {
-                phone: data.phone,
-                email: data.email,
-                password: data.password,
-                name: data.name,
-                role: data.role,
-            },
-        });
-    }
-
-    updatePassword(id: number, password: string) {
-        return this.prismaRepository.prisma.user.update({
-            where: { id },
-            data: { password },
-        });
-    }
-
-    update(id: number, data: Partial<CreateUserDto>) {
-        return this.prismaRepository.prisma.user.update({
-            where: { id },
-            data,
-        });
-    }
-
-    softDelete(id: number) {
-        return this.prismaRepository.prisma.user.update({
-            where: { id },
-            data: { isActive: false },
-        });
-    }
+  softDelete(id: number) {
+    return this.prismaRepository.prisma.user.update({
+      where: { id },
+      data: { isActive: false },
+    });
+  }
 }

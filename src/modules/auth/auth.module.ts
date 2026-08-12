@@ -9,19 +9,21 @@ import { RefreshTokenStrategy } from './strategies/refresh-token.strategy';
 import { UsersModule } from '../users/users.module';
 
 @Module({
-    imports: [
-        PassportModule,
-        JwtModule.registerAsync({
-            inject: [ConfigService],
-            useFactory: async (configService: ConfigService) => ({
-                secret: configService.get<string>('jwt.secret'),
-                signOptions: { expiresIn: configService.get<string>('jwt.expiresIn') as any },
-            }),
-        }),
-        UsersModule,
-    ],
-    controllers: [AuthController],
-    providers: [AuthService, JwtStrategy, RefreshTokenStrategy],
-    exports: [AuthService],
+  imports: [
+    PassportModule,
+    JwtModule.registerAsync({
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => ({
+        secret: configService.get<string>('jwt.secret'),
+        signOptions: {
+          expiresIn: configService.get<string>('jwt.expiresIn') as any,
+        },
+      }),
+    }),
+    UsersModule,
+  ],
+  controllers: [AuthController],
+  providers: [AuthService, JwtStrategy, RefreshTokenStrategy],
+  exports: [AuthService],
 })
 export class AuthModule {}

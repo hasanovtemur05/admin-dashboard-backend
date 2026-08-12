@@ -5,37 +5,37 @@ import { QueryUserDto } from './dto/query-user.dto';
 
 @Injectable()
 export class UsersService {
-    constructor(private readonly usersRepository: UsersRepository) {}
+  constructor(private readonly usersRepository: UsersRepository) {}
 
-    async findByPhone(phone: string) {
-        return this.usersRepository.findByPhone(phone);
-    }
+  async findByPhone(phone: string) {
+    return this.usersRepository.findByPhone(phone);
+  }
 
-    async findByEmail(email: string) {
-        return this.usersRepository.findByEmail(email);
-    }
+  async findByEmail(email: string) {
+    return this.usersRepository.findByEmail(email);
+  }
 
-    async findById(id: number) {
-        return this.usersRepository.findById(id);
-    }
+  async findById(id: number) {
+    return this.usersRepository.findById(id);
+  }
 
-    async findAll(query: QueryUserDto) {
-        return this.usersRepository.findAll(query);
-    }
+  async findAll(query: QueryUserDto) {
+    return this.usersRepository.findAll(query);
+  }
 
-    async create(data: CreateUserDto) {
-        return this.usersRepository.create(data);
-    }
+  async create(data: CreateUserDto) {
+    return this.usersRepository.create(data);
+  }
 
-    async updatePassword(id: number, password: string) {
-        return this.usersRepository.updatePassword(id, password);
-    }
+  async updatePassword(id: number, password: string) {
+    return this.usersRepository.updatePassword(id, password);
+  }
 
-    async update(id: number, data: Partial<CreateUserDto>) {
-        return this.usersRepository.update(id, data);
-    }
+  async update(id: number, data: Partial<CreateUserDto>) {
+    return this.usersRepository.update(id, data);
+  }
 
-    async softDelete(id: number) {
-        return this.usersRepository.softDelete(id);
-    }
+  async softDelete(id: number) {
+    return this.usersRepository.softDelete(id);
+  }
 }

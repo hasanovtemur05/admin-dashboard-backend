@@ -4,18 +4,19 @@ import { SearchService } from './search.service';
 
 @Global()
 @Module({
-    providers: [
-        {
-            provide: SearchService,
-            useFactory: (configService: ConfigService) => {
-                return new SearchService(
-                    configService.get('meilisearch.host'),
-                    configService.get('meilisearch.apiKey'),
-                );
-            },
-            inject: [ConfigService],
-        },
-    ],
-    exports: [SearchService],
+  providers: [
+    {
+      provide: SearchService,
+      useFactory: (configService: ConfigService) => {
+        return new SearchService(
+          configService.get<string>('meilisearch.host') ||
+            'http://localhost:7700',
+          configService.get<string>('meilisearch.apiKey') || '',
+        );
+      },
+      inject: [ConfigService],
+    },
+  ],
+  exports: [SearchService],
 })
 export class SearchModule {}

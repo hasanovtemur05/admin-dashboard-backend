@@ -1,11 +1,19 @@
-import { IsOptional, IsPositive } from 'class-validator';
+import { IsOptional, IsPositive, IsString } from 'class-validator';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 
 export class QueryUserDto {
-    @IsOptional()
-    @IsPositive()
-    page?: number;
+  @ApiPropertyOptional({ example: 1 })
+  @IsOptional()
+  @IsPositive()
+  page?: number;
 
-    @IsOptional()
-    @IsPositive()
-    limit?: number;
+  @ApiPropertyOptional({ example: 20 })
+  @IsOptional()
+  @IsPositive()
+  limit?: number;
+
+  @ApiPropertyOptional({ example: 'john' })
+  @IsOptional()
+  @IsString()
+  search?: string;
 }

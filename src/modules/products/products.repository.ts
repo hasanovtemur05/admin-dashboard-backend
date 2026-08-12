@@ -7,224 +7,217 @@ import { QueryProductDto } from './dto/query-product.dto';
 
 @Injectable()
 export class ProductsRepository {
-    constructor(private readonly prismaRepository: PrismaRepository) {}
+  constructor(private readonly prismaRepository: PrismaRepository) {}
 
-    private readonly includeRelations = {
-        category: true,
-        brand: true,
-        variants: { where: { isActive: true } },
-        images: { orderBy: { order: 'asc' as const } },
-        discounts: {
-            where: {
-                isActive: true,
-                OR: [
-                    { startsAt: null },
-                    { startsAt: { lte: new Date() } },
-                ],
-                AND: [
-                    { endsAt: null },
-                    { endsAt: { gte: new Date() } },
-                ],
-            },
-        },
+  private readonly includeRelations = {
+    category: true,
+    brand: true,
+    variants: { where: { isActive: true } },
+    images: { orderBy: { order: 'asc' as const } },
+    discounts: {
+      where: {
+        isActive: true,
+        OR: [{ startsAt: null }, { startsAt: { lte: new Date() } }],
+        AND: [{ endsAt: null }, { endsAt: { gte: new Date() } }],
+      },
+    },
+  };
+
+  async findAll(query: QueryProductDto) {
+    const take = query.limit || 20;
+    const skip = ((query.page || 1) - 1) * take;
+
+    const where: Prisma.ProductWhereInput = {
+      isActive: query.isActive ?? true,
     };
 
-    async findAll(query: QueryProductDto) {
-        const take = query.limit || 20;
-        const skip = ((query.page || 1) - 1) * take;
-
-        const where: Prisma.ProductWhereInput = {
-            isActive: query.isActive ?? true,
-        };
-
-        if (query.categoryId) {
-            where.categoryId = query.categoryId;
-        }
-
-        if (query.brandId) {
-            where.brandId = query.brandId;
-        }
-
-        if (query.minPrice || query.maxPrice) {
-            where.basePrice = {};
-            if (query.minPrice) where.basePrice.gte = query.minPrice;
-            if (query.maxPrice) where.basePrice.lte = query.maxPrice;
-        }
-
-        if (query.search) {
-            where.OR = [
-                { name: { contains: query.search, mode: 'insensitive' } },
-                { description: { contains: query.search, mode: 'insensitive' } },
-                { sku: { contains: query.search, mode: 'insensitive' } },
-            ];
-        }
-
-        const orderBy: Prisma.ProductOrderByWithRelationInput = {};
-        if (query.sort) {
-            const [field, direction] = query.sort.split(':');
-            orderBy[field as keyof Prisma.ProductOrderByWithRelationInput] = direction as 'asc' | 'desc';
-        } else {
-            orderBy.createdAt = 'desc';
-        }
-
-        const [products, total] = await Promise.all([
-            this.prismaRepository.prisma.product.findMany({
-                where,
-                include: this.includeRelations,
-                take,
-                skip,
-                orderBy,
-            }),
-            this.prismaRepository.prisma.product.count({ where }),
-        ]);
-
-        return {
-            data: products,
-            meta: {
-                total,
-                page: query.page || 1,
-                limit: take,
-                totalPages: Math.ceil(total / take),
-            },
-        };
+    if (query.categoryId) {
+      where.categoryId = query.categoryId;
     }
 
-    async findById(id: number) {
-        return this.prismaRepository.prisma.product.findUnique({
-            where: { id },
-            include: this.includeRelations,
-        });
+    if (query.brandId) {
+      where.brandId = query.brandId;
     }
 
-    async findBySlug(slug: string) {
-        return this.prismaRepository.prisma.product.findUnique({
-            where: { slug },
-            include: this.includeRelations,
-        });
+    if (query.minPrice || query.maxPrice) {
+      where.basePrice = {};
+      if (query.minPrice) where.basePrice.gte = query.minPrice;
+      if (query.maxPrice) where.basePrice.lte = query.maxPrice;
     }
 
-    async create(data: CreateProductDto) {
-        const { variants, images, ...productData } = data;
-
-        return this.prismaRepository.prisma.product.create({
-            data: {
-                ...productData,
-                variants: variants
-                    ? {
-                        create: variants.map((v) => ({
-                            ...v,
-                            sku: v.sku || `${productData.sku}-${v.size || ''}-${v.color || ''}`.replace(/-$/, ''),
-                        })),
-                    }
-                    : undefined,
-                images: images
-                    ? { create: images }
-                    : undefined,
-            },
-            include: this.includeRelations,
-        });
+    if (query.search) {
+      where.OR = [
+        { name: { contains: query.search, mode: 'insensitive' } },
+        { description: { contains: query.search, mode: 'insensitive' } },
+        { sku: { contains: query.search, mode: 'insensitive' } },
+      ];
     }
 
-    async update(id: number, data: UpdateProductDto) {
-        const { variants, images, ...productData } = data;
-
-        return this.prismaRepository.prisma.product.update({
-            where: { id },
-            data: productData,
-            include: this.includeRelations,
-        });
+    const orderBy: Prisma.ProductOrderByWithRelationInput = {};
+    if (query.sort) {
+      const [field, direction] = query.sort.split(':');
+      orderBy[field as keyof Prisma.ProductOrderByWithRelationInput] =
+        direction as 'asc' | 'desc';
+    } else {
+      orderBy.createdAt = 'desc';
     }
 
-    async softDelete(id: number) {
-        return this.prismaRepository.prisma.product.update({
-            where: { id },
-            data: { isActive: false },
-        });
-    }
+    const [products, total] = await Promise.all([
+      this.prismaRepository.prisma.product.findMany({
+        where,
+        include: this.includeRelations,
+        take,
+        skip,
+        orderBy,
+      }),
+      this.prismaRepository.prisma.product.count({ where }),
+    ]);
 
-    async addVariant(productId: number, data: any) {
-        return this.prismaRepository.prisma.productVariant.create({
-            data: {
-                productId,
-                ...data,
-            },
-        });
-    }
+    return {
+      data: products,
+      meta: {
+        total,
+        page: query.page || 1,
+        limit: take,
+        totalPages: Math.ceil(total / take),
+      },
+    };
+  }
 
-    async updateVariant(variantId: number, data: any) {
-        return this.prismaRepository.prisma.productVariant.update({
-            where: { id: variantId },
-            data,
-        });
-    }
+  async findById(id: number) {
+    return this.prismaRepository.prisma.product.findUnique({
+      where: { id },
+      include: this.includeRelations,
+    });
+  }
 
-    async deleteVariant(variantId: number) {
-        return this.prismaRepository.prisma.productVariant.delete({
-            where: { id: variantId },
-        });
-    }
+  async findBySlug(slug: string) {
+    return this.prismaRepository.prisma.product.findUnique({
+      where: { slug },
+      include: this.includeRelations,
+    });
+  }
 
-    async addImage(productId: number, data: any) {
-        return this.prismaRepository.prisma.productImage.create({
-            data: {
-                productId,
-                ...data,
-            },
-        });
-    }
+  async create(data: CreateProductDto) {
+    const { variants, images, ...productData } = data;
 
-    async deleteImage(imageId: number) {
-        return this.prismaRepository.prisma.productImage.delete({
-            where: { id: imageId },
-        });
-    }
+    return this.prismaRepository.prisma.product.create({
+      data: {
+        ...productData,
+        variants: variants
+          ? {
+              create: variants.map((v) => ({
+                ...v,
+                sku:
+                  v.sku ||
+                  `${productData.sku}-${v.size || ''}-${v.color || ''}`.replace(
+                    /-$/,
+                    '',
+                  ),
+              })),
+            }
+          : undefined,
+        images: images ? { create: images } : undefined,
+      },
+      include: this.includeRelations,
+    });
+  }
 
-    async getWeeklyProducts(weekStart?: Date, weekEnd?: Date) {
-        const now = new Date();
-        const start = weekStart || new Date(now.setDate(now.getDate() - now.getDay()));
-        const end = weekEnd || new Date(start.getTime() + 7 * 24 * 60 * 60 * 1000);
+  async update(id: number, data: UpdateProductDto) {
+    const { variants, images, ...productData } = data;
 
-        return this.prismaRepository.prisma.weeklyProduct.findMany({
-            where: {
+    return this.prismaRepository.prisma.product.update({
+      where: { id },
+      data: productData,
+      include: this.includeRelations,
+    });
+  }
+
+  async softDelete(id: number) {
+    return this.prismaRepository.prisma.product.update({
+      where: { id },
+      data: { isActive: false },
+    });
+  }
+
+  async addVariant(productId: number, data: any) {
+    return this.prismaRepository.prisma.productVariant.create({
+      data: {
+        productId,
+        ...data,
+      },
+    });
+  }
+
+  async updateVariant(variantId: number, data: any) {
+    return this.prismaRepository.prisma.productVariant.update({
+      where: { id: variantId },
+      data,
+    });
+  }
+
+  async deleteVariant(variantId: number) {
+    return this.prismaRepository.prisma.productVariant.delete({
+      where: { id: variantId },
+    });
+  }
+
+  async addImage(productId: number, data: any) {
+    return this.prismaRepository.prisma.productImage.create({
+      data: {
+        productId,
+        ...data,
+      },
+    });
+  }
+
+  async deleteImage(imageId: number) {
+    return this.prismaRepository.prisma.productImage.delete({
+      where: { id: imageId },
+    });
+  }
+
+  async getWeeklyProducts(weekStart?: Date, weekEnd?: Date) {
+    const now = new Date();
+    const start =
+      weekStart || new Date(now.setDate(now.getDate() - now.getDay()));
+    const end = weekEnd || new Date(start.getTime() + 7 * 24 * 60 * 60 * 1000);
+
+    return this.prismaRepository.prisma.weeklyProduct.findMany({
+      where: {
+        isActive: true,
+        weekStart: { lte: end },
+        weekEnd: { gte: start },
+      },
+      include: {
+        product: {
+          include: {
+            images: { where: { isMain: true }, take: 1 },
+            variants: { where: { isActive: true }, take: 1 },
+            discounts: {
+              where: {
                 isActive: true,
-                weekStart: { lte: end },
-                weekEnd: { gte: start },
+                OR: [{ startsAt: null }, { startsAt: { lte: new Date() } }],
+                AND: [{ endsAt: null }, { endsAt: { gte: new Date() } }],
+              },
             },
-            include: {
-                product: {
-                    include: {
-                        images: { where: { isMain: true }, take: 1 },
-                        variants: { where: { isActive: true }, take: 1 },
-                        discounts: {
-                            where: {
-                                isActive: true,
-                                OR: [
-                                    { startsAt: null },
-                                    { startsAt: { lte: new Date() } },
-                                ],
-                                AND: [
-                                    { endsAt: null },
-                                    { endsAt: { gte: new Date() } },
-                                ],
-                            },
-                        },
-                    },
-                },
-            },
-            orderBy: { order: 'asc' },
-        });
-    }
+          },
+        },
+      },
+      orderBy: { order: 'asc' },
+    });
+  }
 
-    async createWeeklyProduct(data: any) {
-        return this.prismaRepository.prisma.weeklyProduct.create({
-            data,
-            include: { product: true },
-        });
-    }
+  async createWeeklyProduct(data: any) {
+    return this.prismaRepository.prisma.weeklyProduct.create({
+      data,
+      include: { product: true },
+    });
+  }
 
-    async deleteWeeklyProduct(id: number) {
-        return this.prismaRepository.prisma.weeklyProduct.delete({
-            where: { id },
-        });
-    }
+  async deleteWeeklyProduct(id: number) {
+    return this.prismaRepository.prisma.weeklyProduct.delete({
+      where: { id },
+    });
+  }
 }

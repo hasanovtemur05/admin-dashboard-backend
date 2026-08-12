@@ -1,25 +1,49 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { Controller, Get, Param, UseGuards } from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiBearerAuth,
+  ApiResponse,
+} from '@nestjs/swagger';
 import { RolesService } from './roles.service';
-import { CreateRoleDto } from './dto/create-role.dto';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { Roles as RolesDecorator } from '../auth/decorators/roles.decorator';
+import { UserRole } from '@prisma/client';
 
-@ApiBearerAuth('JWT-auth')
+@ApiTags('Roles')
 @Controller('roles')
 export class RolesController {
-    constructor(private readonly rolesService: RolesService) {}
+  constructor(private readonly rolesService: RolesService) {}
 
-    @Get()
-    findAll() {
-        return this.rolesService.findAll();
-    }
+  @Get()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @RolesDecorator(UserRole.SUPER_ADMIN)
+  @ApiBearerAuth('JWT-auth')
+  @ApiOperation({ summary: 'Get all roles' })
+  @ApiResponse({ status: 200, description: 'Roles retrieved successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden - insufficient permissions',
+  })
+  findAll() {
+    return this.rolesService.findAll();
+  }
 
-    @Get(':id')
-    findOne(@Param('id') id: string) {
-        return this.rolesService.findOne(Number(id));
-    }
-
-    @Post()
-    create(@Body() payload: CreateRoleDto) {
-        return this.rolesService.create(payload);
-    }
+  @Get(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @RolesDecorator(UserRole.SUPER_ADMIN)
+  @ApiBearerAuth('JWT-auth')
+  @ApiOperation({ summary: 'Get role by ID' })
+  @ApiResponse({ status: 200, description: 'Role retrieved successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden - insufficient permissions',
+  })
+  @ApiResponse({ status: 404, description: 'Role not found' })
+  findOne(@Param('id') id: string) {
+    return this.rolesService.findOne(Number(id));
+  }
 }

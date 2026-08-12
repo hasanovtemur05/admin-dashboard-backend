@@ -5,9 +5,9 @@ import { PermissionsRepository } from './permissions.repository';
 import { PermissionsService } from './permissions.service';
 
 @Module({
-    imports: [DatabaseModule],
-    controllers: [PermissionsController],
-    providers: [PermissionsService, PermissionsRepository],
-    exports: [PermissionsService],
+  imports: [DatabaseModule],
+  controllers: [PermissionsController],
+  providers: [PermissionsService, PermissionsRepository],
+  exports: [PermissionsService],
 })
 export class PermissionsModule {}

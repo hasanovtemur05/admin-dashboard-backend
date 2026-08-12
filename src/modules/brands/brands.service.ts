@@ -5,48 +5,48 @@ import { UpdateBrandDto } from './dto/update-brand.dto';
 
 @Injectable()
 export class BrandsService {
-    constructor(private readonly brandsRepository: BrandsRepository) {}
+  constructor(private readonly brandsRepository: BrandsRepository) {}
 
-    async findAll() {
-        return this.brandsRepository.findAll();
+  async findAll() {
+    return this.brandsRepository.findAll();
+  }
+
+  async findById(id: number) {
+    const brand = await this.brandsRepository.findById(id);
+    if (!brand) {
+      throw new NotFoundException('Brand not found');
+    }
+    return brand;
+  }
+
+  async findBySlug(slug: string) {
+    const brand = await this.brandsRepository.findBySlug(slug);
+    if (!brand) {
+      throw new NotFoundException('Brand not found');
+    }
+    return brand;
+  }
+
+  async create(createBrandDto: CreateBrandDto) {
+    return this.brandsRepository.create(createBrandDto);
+  }
+
+  async update(id: number, updateBrandDto: UpdateBrandDto) {
+    const brand = await this.brandsRepository.findById(id);
+    if (!brand) {
+      throw new NotFoundException('Brand not found');
     }
 
-    async findById(id: number) {
-        const brand = await this.brandsRepository.findById(id);
-        if (!brand) {
-            throw new NotFoundException('Brand not found');
-        }
-        return brand;
+    return this.brandsRepository.update(id, updateBrandDto);
+  }
+
+  async softDelete(id: number) {
+    const brand = await this.brandsRepository.findById(id);
+    if (!brand) {
+      throw new NotFoundException('Brand not found');
     }
 
-    async findBySlug(slug: string) {
-        const brand = await this.brandsRepository.findBySlug(slug);
-        if (!brand) {
-            throw new NotFoundException('Brand not found');
-        }
-        return brand;
-    }
-
-    async create(createBrandDto: CreateBrandDto) {
-        return this.brandsRepository.create(createBrandDto);
-    }
-
-    async update(id: number, updateBrandDto: UpdateBrandDto) {
-        const brand = await this.brandsRepository.findById(id);
-        if (!brand) {
-            throw new NotFoundException('Brand not found');
-        }
-
-        return this.brandsRepository.update(id, updateBrandDto);
-    }
-
-    async softDelete(id: number) {
-        const brand = await this.brandsRepository.findById(id);
-        if (!brand) {
-            throw new NotFoundException('Brand not found');
-        }
-
-        await this.brandsRepository.softDelete(id);
-        return { message: 'Brand deleted successfully' };
-    }
+    await this.brandsRepository.softDelete(id);
+    return { message: 'Brand deleted successfully' };
+  }
 }

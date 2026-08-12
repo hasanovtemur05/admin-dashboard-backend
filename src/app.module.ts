@@ -1,8 +1,8 @@
 import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { ThrottlerModule } from '@nestjs/throttler';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { envValidationSchema } from './config/env.validation';
+import configuration from './config/configuration';
 import { DatabaseModule } from './database/database.module';
 import { RedisModule } from './common/redis/redis.module';
 import { SearchModule } from './common/search/search.module';
@@ -23,47 +23,38 @@ import { CompressionMiddleware } from './common/middleware/compression.middlewar
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
 
 @Module({
-    imports: [
-        ConfigModule.forRoot({
-            isGlobal: true,
-            load: [configuration],
-            validationSchema: envValidationSchema,
-        }),
-        ThrottlerModule.forRootAsync({
-            inject: [ConfigService],
-            useFactory: (config: ConfigService) => ({
-                throttlers: [
-                    {
-                        ttl: config.get('throttle.ttl') || 60000,
-                        limit: config.get('throttle.limit') || 100,
-                    },
-                ],
-            }),
-        }),
-        DatabaseModule,
-        RedisModule,
-        SearchModule,
-        FileUploadModule,
-        AuthModule,
-        UsersModule,
-        RolesModule,
-        PermissionsModule,
-        DashboardModule,
-        HealthModule,
-        CategoriesModule,
-        BrandsModule,
-        ProductsModule,
-        BannersModule,
-        OrdersModule,
-        ProductSearchModule,
-    ],
-    controllers: [AppController],
-    providers: [AppService],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: [configuration],
+      validationSchema: envValidationSchema,
+    }),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000,
+        limit: 100,
+      },
+    ]),
+    DatabaseModule,
+    RedisModule,
+    SearchModule,
+    FileUploadModule,
+    AuthModule,
+    UsersModule,
+    RolesModule,
+    PermissionsModule,
+    DashboardModule,
+    HealthModule,
+    CategoriesModule,
+    BrandsModule,
+    ProductsModule,
+    BannersModule,
+    OrdersModule,
+    ProductSearchModule,
+  ],
 })
 export class AppModule implements NestModule {
-    configure(consumer: MiddlewareConsumer) {
-        consumer
-            .apply(CompressionMiddleware, LoggerMiddleware)
-            .forRoutes('*');
-    }
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(CompressionMiddleware, LoggerMiddleware).forRoutes('*');
+  }
 }
