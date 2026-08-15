@@ -11,6 +11,9 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
 
+  // Swagger documentation (before global prefix)
+  setupSwagger(app);
+
   app.setGlobalPrefix('api');
 
   // Enable CORS
@@ -40,9 +43,6 @@ async function bootstrap() {
     new LoggingInterceptor(),
     new ResponseInterceptor(),
   );
-
-  // Swagger documentation
-  setupSwagger(app);
 
   const port = configService.get<number>('port') || 3000;
 
