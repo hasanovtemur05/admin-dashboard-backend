@@ -15,7 +15,7 @@ export class UsersService {
     return this.usersRepository.findByEmail(email);
   }
 
-  async findById(id: number) {
+  async findById(id: string) {
     return this.usersRepository.findById(id);
   }
 
@@ -27,15 +27,15 @@ export class UsersService {
     return this.usersRepository.create(data);
   }
 
-  async updatePassword(id: number, password: string) {
+  async updatePassword(id: string, password: string) {
     return this.usersRepository.updatePassword(id, password);
   }
 
-  async update(id: number, data: Partial<CreateUserDto>) {
+  async update(id: string, data: Partial<CreateUserDto>) {
     return this.usersRepository.update(id, data);
   }
 
-  async softDelete(id: number) {
+  async softDelete(id: string) {
     return this.usersRepository.softDelete(id);
   }
 }

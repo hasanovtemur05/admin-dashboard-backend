@@ -37,7 +37,7 @@ export class CategoriesService {
     return tree;
   }
 
-  async findById(id: number) {
+  async findById(id: string) {
     const category = await this.categoriesRepository.findById(id);
     if (!category) {
       throw new NotFoundException('Category not found');
@@ -68,7 +68,7 @@ export class CategoriesService {
     return category;
   }
 
-  async update(id: number, updateCategoryDto: UpdateCategoryDto) {
+  async update(id: string, updateCategoryDto: UpdateCategoryDto) {
     const category = await this.categoriesRepository.findById(id);
     if (!category) {
       throw new NotFoundException('Category not found');
@@ -86,7 +86,7 @@ export class CategoriesService {
     return updated;
   }
 
-  async softDelete(id: number) {
+  async softDelete(id: string) {
     const category = await this.categoriesRepository.findById(id);
     if (!category) {
       throw new NotFoundException('Category not found');
@@ -102,7 +102,7 @@ export class CategoriesService {
   }
 
   async getProductsByCategory(
-    categoryId: number,
+    categoryId: string,
     options?: {
       page?: number;
       limit?: number;

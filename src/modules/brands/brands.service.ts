@@ -11,7 +11,7 @@ export class BrandsService {
     return this.brandsRepository.findAll();
   }
 
-  async findById(id: number) {
+  async findById(id: string) {
     const brand = await this.brandsRepository.findById(id);
     if (!brand) {
       throw new NotFoundException('Brand not found');
@@ -31,7 +31,7 @@ export class BrandsService {
     return this.brandsRepository.create(createBrandDto);
   }
 
-  async update(id: number, updateBrandDto: UpdateBrandDto) {
+  async update(id: string, updateBrandDto: UpdateBrandDto) {
     const brand = await this.brandsRepository.findById(id);
     if (!brand) {
       throw new NotFoundException('Brand not found');
@@ -40,7 +40,7 @@ export class BrandsService {
     return this.brandsRepository.update(id, updateBrandDto);
   }
 
-  async softDelete(id: number) {
+  async softDelete(id: string) {
     const brand = await this.brandsRepository.findById(id);
     if (!brand) {
       throw new NotFoundException('Brand not found');

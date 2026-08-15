@@ -31,7 +31,7 @@ export class BannersService {
     return banners;
   }
 
-  async findById(id: number) {
+  async findById(id: string) {
     const banner = await this.bannersRepository.findById(id);
     if (!banner) {
       throw new NotFoundException('Banner not found');
@@ -45,7 +45,7 @@ export class BannersService {
     return banner;
   }
 
-  async update(id: number, updateBannerDto: UpdateBannerDto) {
+  async update(id: string, updateBannerDto: UpdateBannerDto) {
     const banner = await this.bannersRepository.findById(id);
     if (!banner) {
       throw new NotFoundException('Banner not found');
@@ -56,7 +56,7 @@ export class BannersService {
     return updated;
   }
 
-  async softDelete(id: number) {
+  async softDelete(id: string) {
     const banner = await this.bannersRepository.findById(id);
     if (!banner) {
       throw new NotFoundException('Banner not found');
@@ -67,7 +67,7 @@ export class BannersService {
     return { message: 'Banner deleted successfully' };
   }
 
-  async delete(id: number) {
+  async delete(id: string) {
     const banner = await this.bannersRepository.findById(id);
     if (!banner) {
       throw new NotFoundException('Banner not found');

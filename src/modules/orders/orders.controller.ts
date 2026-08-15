@@ -6,7 +6,7 @@ import {
   Body,
   Param,
   Query,
-  ParseIntPipe,
+  ParseUUIDPipe,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -46,7 +46,7 @@ export class OrdersController {
     @Query('page') page?: number,
     @Query('limit') limit?: number,
     @Query('status') status?: OrderStatus,
-    @Query('userId') userId?: number,
+    @Query('userId') userId?: string,
   ) {
     return this.ordersService.findAll({ page, limit, status, userId });
   }
@@ -77,7 +77,7 @@ export class OrdersController {
   @ApiResponse({ status: 200, description: 'Order retrieved successfully' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 404, description: 'Order not found' })
-  async findById(@Param('id', ParseIntPipe) id: number) {
+  async findById(@Param('id', ParseUUIDPipe) id: string) {
     return this.ordersService.findById(id);
   }
 
@@ -90,7 +90,7 @@ export class OrdersController {
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   async create(
     @Body() data: { items: any[]; notes?: string },
-    @Query('userId') userId: number,
+    @Query('userId') userId: string,
   ) {
     return this.ordersService.create({ userId, ...data });
   }
@@ -112,7 +112,7 @@ export class OrdersController {
   })
   @ApiResponse({ status: 404, description: 'Order not found' })
   async updateStatus(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id', ParseUUIDPipe) id: string,
     @Body('status') status: OrderStatus,
   ) {
     return this.ordersService.updateStatus(id, status);

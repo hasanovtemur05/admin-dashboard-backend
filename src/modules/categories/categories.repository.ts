@@ -35,7 +35,7 @@ export class CategoriesRepository {
     return categories.filter((c) => !c.parentId);
   }
 
-  async findById(id: number) {
+  async findById(id: string) {
     return this.prismaRepository.prisma.category.findUnique({
       where: { id },
       include: {
@@ -67,14 +67,14 @@ export class CategoriesRepository {
     });
   }
 
-  async update(id: number, data: UpdateCategoryDto) {
+  async update(id: string, data: UpdateCategoryDto) {
     return this.prismaRepository.prisma.category.update({
       where: { id },
       data,
     });
   }
 
-  async softDelete(id: number) {
+  async softDelete(id: string) {
     return this.prismaRepository.prisma.category.update({
       where: { id },
       data: { isActive: false },
@@ -82,7 +82,7 @@ export class CategoriesRepository {
   }
 
   async getProductsByCategory(
-    categoryId: number,
+    categoryId: string,
     options?: {
       page?: number;
       limit?: number;

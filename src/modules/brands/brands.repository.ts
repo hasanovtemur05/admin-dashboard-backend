@@ -14,7 +14,7 @@ export class BrandsRepository {
     });
   }
 
-  async findById(id: number) {
+  async findById(id: string) {
     return this.prismaRepository.prisma.brand.findUnique({
       where: { id },
     });
@@ -32,14 +32,14 @@ export class BrandsRepository {
     });
   }
 
-  async update(id: number, data: UpdateBrandDto) {
+  async update(id: string, data: UpdateBrandDto) {
     return this.prismaRepository.prisma.brand.update({
       where: { id },
       data,
     });
   }
 
-  async softDelete(id: number) {
+  async softDelete(id: string) {
     return this.prismaRepository.prisma.brand.update({
       where: { id },
       data: { isActive: false },

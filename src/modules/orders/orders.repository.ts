@@ -10,7 +10,7 @@ export class OrdersRepository {
     page?: number;
     limit?: number;
     status?: OrderStatus;
-    userId?: number;
+    userId?: string;
   }) {
     const take = query.limit || 20;
     const skip = ((query.page || 1) - 1) * take;
@@ -74,7 +74,7 @@ export class OrdersRepository {
     };
   }
 
-  async findById(id: number) {
+  async findById(id: string) {
     return this.prismaRepository.prisma.order.findUnique({
       where: { id },
       include: {
@@ -96,7 +96,7 @@ export class OrdersRepository {
     });
   }
 
-  async create(data: { userId: number; items: any[]; notes?: string }) {
+  async create(data: { userId: string; items: any[]; notes?: string }) {
     const { userId, items, notes } = data;
 
     // Calculate total price
@@ -163,7 +163,7 @@ export class OrdersRepository {
     return order;
   }
 
-  async updateStatus(id: number, status: OrderStatus) {
+  async updateStatus(id: string, status: OrderStatus) {
     return this.prismaRepository.prisma.order.update({
       where: { id },
       data: { status },

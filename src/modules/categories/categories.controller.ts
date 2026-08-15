@@ -7,7 +7,7 @@ import {
   Body,
   Param,
   Query,
-  ParseIntPipe,
+  ParseUUIDPipe,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -54,7 +54,7 @@ export class CategoriesController {
   @ApiOperation({ summary: 'Get category by ID' })
   @ApiResponse({ status: 200, description: 'Category retrieved successfully' })
   @ApiResponse({ status: 404, description: 'Category not found' })
-  async findById(@Param('id', ParseIntPipe) id: number) {
+  async findById(@Param('id', ParseUUIDPipe) id: string) {
     return this.categoriesService.findById(id);
   }
 
@@ -74,7 +74,7 @@ export class CategoriesController {
   @ApiResponse({ status: 200, description: 'Products retrieved successfully' })
   @ApiResponse({ status: 404, description: 'Category not found' })
   async getProductsByCategory(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id', ParseUUIDPipe) id: string,
     @Query('page') page?: number,
     @Query('limit') limit?: number,
     @Query('sort') sort?: string,
@@ -120,7 +120,7 @@ export class CategoriesController {
     description: 'Conflict - cannot set parent to self',
   })
   async update(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id', ParseUUIDPipe) id: string,
     @Body() updateCategoryDto: UpdateCategoryDto,
   ) {
     return this.categoriesService.update(id, updateCategoryDto);
@@ -139,7 +139,7 @@ export class CategoriesController {
   })
   @ApiResponse({ status: 404, description: 'Category not found' })
   @ApiResponse({ status: 409, description: 'Conflict - category has children' })
-  async remove(@Param('id', ParseIntPipe) id: number) {
+  async remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.categoriesService.softDelete(id);
   }
 }

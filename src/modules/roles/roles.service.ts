@@ -9,7 +9,7 @@ export class RolesService {
     return this.rolesRepository.findAll();
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return this.rolesRepository.findOne(id);
   }
 }

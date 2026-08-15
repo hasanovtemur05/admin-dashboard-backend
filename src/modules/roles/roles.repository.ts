@@ -7,12 +7,12 @@ export class RolesRepository {
 
   findAll() {
     return [
-      { id: 1, name: 'ADMIN', description: 'Full access to all endpoints' },
-      { id: 2, name: 'USER', description: 'Regular user access' },
+      { id: '1', name: 'ADMIN', description: 'Full access to all endpoints' },
+      { id: '2', name: 'USER', description: 'Regular user access' },
     ];
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     const roles = this.findAll();
     return roles.find((r) => r.id === id);
   }

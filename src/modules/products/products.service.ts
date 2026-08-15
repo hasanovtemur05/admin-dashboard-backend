@@ -20,7 +20,7 @@ export class ProductsService {
     return this.productsRepository.findAll(query);
   }
 
-  async findById(id: number) {
+  async findById(id: string) {
     const product = await this.productsRepository.findById(id);
     if (!product) {
       throw new NotFoundException('Product not found');
@@ -56,7 +56,7 @@ export class ProductsService {
     return product;
   }
 
-  async update(id: number, updateProductDto: UpdateProductDto) {
+  async update(id: string, updateProductDto: UpdateProductDto) {
     const product = await this.productsRepository.findById(id);
     if (!product) {
       throw new NotFoundException('Product not found');
@@ -81,7 +81,7 @@ export class ProductsService {
     return updated;
   }
 
-  async softDelete(id: number) {
+  async softDelete(id: string) {
     const product = await this.productsRepository.findById(id);
     if (!product) {
       throw new NotFoundException('Product not found');
@@ -95,7 +95,7 @@ export class ProductsService {
     return { message: 'Product deleted successfully' };
   }
 
-  async addVariant(productId: number, data: any) {
+  async addVariant(productId: string, data: any) {
     const product = await this.productsRepository.findById(productId);
     if (!product) {
       throw new NotFoundException('Product not found');
@@ -104,15 +104,15 @@ export class ProductsService {
     return this.productsRepository.addVariant(productId, data);
   }
 
-  async updateVariant(variantId: number, data: any) {
+  async updateVariant(variantId: string, data: any) {
     return this.productsRepository.updateVariant(variantId, data);
   }
 
-  async deleteVariant(variantId: number) {
+  async deleteVariant(variantId: string) {
     return this.productsRepository.deleteVariant(variantId);
   }
 
-  async addImage(productId: number, data: any) {
+  async addImage(productId: string, data: any) {
     const product = await this.productsRepository.findById(productId);
     if (!product) {
       throw new NotFoundException('Product not found');
@@ -121,7 +121,7 @@ export class ProductsService {
     return this.productsRepository.addImage(productId, data);
   }
 
-  async deleteImage(imageId: number) {
+  async deleteImage(imageId: string) {
     return this.productsRepository.deleteImage(imageId);
   }
 
@@ -146,7 +146,7 @@ export class ProductsService {
     return product;
   }
 
-  async deleteWeeklyProduct(id: number) {
+  async deleteWeeklyProduct(id: string) {
     await this.productsRepository.deleteWeeklyProduct(id);
     await this.redisService.delPattern('weekly-products:*');
     return { message: 'Weekly product removed successfully' };

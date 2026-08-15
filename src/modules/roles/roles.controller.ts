@@ -44,6 +44,6 @@ export class RolesController {
   })
   @ApiResponse({ status: 404, description: 'Role not found' })
   findOne(@Param('id') id: string) {
-    return this.rolesService.findOne(Number(id));
+    return this.rolesService.findOne(id);
   }
 }

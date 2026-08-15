@@ -8,10 +8,10 @@ export class AuditLogService {
   constructor(private readonly prismaRepository: PrismaRepository) {}
 
   async log(data: {
-    adminId: number;
+    adminId: string;
     action: string;
     entity: string;
-    entityId?: number;
+    entityId?: string;
     details?: any;
     ipAddress?: string;
   }) {

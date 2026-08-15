@@ -26,7 +26,7 @@ export class BannersRepository {
     });
   }
 
-  async findById(id: number) {
+  async findById(id: string) {
     return this.prismaRepository.prisma.banner.findUnique({
       where: { id },
     });
@@ -38,21 +38,21 @@ export class BannersRepository {
     });
   }
 
-  async update(id: number, data: UpdateBannerDto) {
+  async update(id: string, data: UpdateBannerDto) {
     return this.prismaRepository.prisma.banner.update({
       where: { id },
       data,
     });
   }
 
-  async softDelete(id: number) {
+  async softDelete(id: string) {
     return this.prismaRepository.prisma.banner.update({
       where: { id },
       data: { isActive: false },
     });
   }
 
-  async delete(id: number) {
+  async delete(id: string) {
     return this.prismaRepository.prisma.banner.delete({
       where: { id },
     });

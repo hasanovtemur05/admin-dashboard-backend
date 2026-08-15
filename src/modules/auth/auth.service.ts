@@ -133,7 +133,7 @@ export class AuthService {
     }
   }
 
-  async changePassword(userId: number, changePasswordDto: ChangePasswordDto) {
+  async changePassword(userId: string, changePasswordDto: ChangePasswordDto) {
     const user = await this.usersService.findById(userId);
     if (!user) {
       throw new UnauthorizedException('User not found');
@@ -153,7 +153,7 @@ export class AuthService {
     return { message: 'Password changed successfully' };
   }
 
-  async getProfile(userId: number) {
+  async getProfile(userId: string) {
     const user = await this.usersService.findById(userId);
     if (!user) {
       throw new UnauthorizedException('User not found');

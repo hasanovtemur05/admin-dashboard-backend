@@ -84,7 +84,7 @@ export class ProductsRepository {
     };
   }
 
-  async findById(id: number) {
+  async findById(id: string) {
     return this.prismaRepository.prisma.product.findUnique({
       where: { id },
       include: this.includeRelations,
@@ -123,7 +123,7 @@ export class ProductsRepository {
     });
   }
 
-  async update(id: number, data: UpdateProductDto) {
+  async update(id: string, data: UpdateProductDto) {
     const { variants, images, ...productData } = data;
 
     return this.prismaRepository.prisma.product.update({
@@ -133,14 +133,14 @@ export class ProductsRepository {
     });
   }
 
-  async softDelete(id: number) {
+  async softDelete(id: string) {
     return this.prismaRepository.prisma.product.update({
       where: { id },
       data: { isActive: false },
     });
   }
 
-  async addVariant(productId: number, data: any) {
+  async addVariant(productId: string, data: any) {
     return this.prismaRepository.prisma.productVariant.create({
       data: {
         productId,
@@ -149,20 +149,20 @@ export class ProductsRepository {
     });
   }
 
-  async updateVariant(variantId: number, data: any) {
+  async updateVariant(variantId: string, data: any) {
     return this.prismaRepository.prisma.productVariant.update({
       where: { id: variantId },
       data,
     });
   }
 
-  async deleteVariant(variantId: number) {
+  async deleteVariant(variantId: string) {
     return this.prismaRepository.prisma.productVariant.delete({
       where: { id: variantId },
     });
   }
 
-  async addImage(productId: number, data: any) {
+  async addImage(productId: string, data: any) {
     return this.prismaRepository.prisma.productImage.create({
       data: {
         productId,
@@ -171,7 +171,7 @@ export class ProductsRepository {
     });
   }
 
-  async deleteImage(imageId: number) {
+  async deleteImage(imageId: string) {
     return this.prismaRepository.prisma.productImage.delete({
       where: { id: imageId },
     });
@@ -215,7 +215,7 @@ export class ProductsRepository {
     });
   }
 
-  async deleteWeeklyProduct(id: number) {
+  async deleteWeeklyProduct(id: string) {
     return this.prismaRepository.prisma.weeklyProduct.delete({
       where: { id },
     });

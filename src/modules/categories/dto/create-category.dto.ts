@@ -35,10 +35,10 @@ export class CreateCategoryDto {
   @IsOptional()
   order?: number;
 
-  @ApiPropertyOptional({ example: 1 })
-  @IsNumber()
+  @ApiPropertyOptional({ example: 'uuid-string' })
+  @IsString()
   @IsOptional()
-  parentId?: number;
+  parentId?: string;
 
   @ApiPropertyOptional({ default: true })
   @IsBoolean()

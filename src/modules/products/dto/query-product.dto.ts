@@ -29,16 +29,14 @@ export class QueryProductDto {
   search?: string;
 
   @ApiPropertyOptional({ example: 1 })
-  @IsNumber()
+  @IsString()
   @IsOptional()
-  @Type(() => Number)
-  categoryId?: number;
+  categoryId?: string;
 
   @ApiPropertyOptional({ example: 1 })
-  @IsNumber()
+  @IsString()
   @IsOptional()
-  @Type(() => Number)
-  brandId?: number;
+  brandId?: string;
 
   @ApiPropertyOptional({ example: 100 })
   @IsNumber()

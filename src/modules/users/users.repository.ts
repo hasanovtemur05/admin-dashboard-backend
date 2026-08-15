@@ -18,7 +18,7 @@ export class UsersRepository {
     });
   }
 
-  findById(id: number) {
+  findById(id: string) {
     return this.prismaRepository.prisma.user.findUnique({ where: { id } });
   }
 
@@ -65,21 +65,21 @@ export class UsersRepository {
     });
   }
 
-  updatePassword(id: number, password: string) {
+  updatePassword(id: string, password: string) {
     return this.prismaRepository.prisma.user.update({
       where: { id },
       data: { password },
     });
   }
 
-  update(id: number, data: Partial<CreateUserDto>) {
+  update(id: string, data: Partial<CreateUserDto>) {
     return this.prismaRepository.prisma.user.update({
       where: { id },
       data,
     });
   }
 
-  softDelete(id: number) {
+  softDelete(id: string) {
     return this.prismaRepository.prisma.user.update({
       where: { id },
       data: { isActive: false },

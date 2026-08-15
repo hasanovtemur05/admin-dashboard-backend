@@ -7,7 +7,7 @@ import {
   Body,
   Param,
   Query,
-  ParseIntPipe,
+  ParseUUIDPipe,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -70,7 +70,7 @@ export class ProductsController {
   @ApiOperation({ summary: 'Get product by ID' })
   @ApiResponse({ status: 200, description: 'Product retrieved successfully' })
   @ApiResponse({ status: 404, description: 'Product not found' })
-  async findById(@Param('id', ParseIntPipe) id: number) {
+  async findById(@Param('id', ParseUUIDPipe) id: string) {
     return this.productsService.findById(id);
   }
 
@@ -112,7 +112,7 @@ export class ProductsController {
   })
   @ApiResponse({ status: 404, description: 'Product not found' })
   async update(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id', ParseUUIDPipe) id: string,
     @Body() updateProductDto: UpdateProductDto,
   ) {
     return this.productsService.update(id, updateProductDto);
@@ -130,7 +130,7 @@ export class ProductsController {
     description: 'Forbidden - insufficient permissions',
   })
   @ApiResponse({ status: 404, description: 'Product not found' })
-  async remove(@Param('id', ParseIntPipe) id: number) {
+  async remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.productsService.softDelete(id);
   }
 
@@ -142,7 +142,7 @@ export class ProductsController {
   @ApiResponse({ status: 201, description: 'Variant added successfully' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 404, description: 'Product not found' })
-  async addVariant(@Param('id', ParseIntPipe) id: number, @Body() data: any) {
+  async addVariant(@Param('id', ParseUUIDPipe) id: string, @Body() data: any) {
     return this.productsService.addVariant(id, data);
   }
 
@@ -155,7 +155,7 @@ export class ProductsController {
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 404, description: 'Variant not found' })
   async updateVariant(
-    @Param('variantId', ParseIntPipe) variantId: number,
+    @Param('variantId', ParseUUIDPipe) variantId: string,
     @Body() data: any,
   ) {
     return this.productsService.updateVariant(variantId, data);
@@ -169,7 +169,7 @@ export class ProductsController {
   @ApiResponse({ status: 200, description: 'Variant deleted successfully' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 404, description: 'Variant not found' })
-  async removeVariant(@Param('variantId', ParseIntPipe) variantId: number) {
+  async removeVariant(@Param('variantId', ParseUUIDPipe) variantId: string) {
     return this.productsService.deleteVariant(variantId);
   }
 
@@ -181,7 +181,7 @@ export class ProductsController {
   @ApiResponse({ status: 201, description: 'Image added successfully' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 404, description: 'Product not found' })
-  async addImage(@Param('id', ParseIntPipe) id: number, @Body() data: any) {
+  async addImage(@Param('id', ParseUUIDPipe) id: string, @Body() data: any) {
     return this.productsService.addImage(id, data);
   }
 
@@ -193,7 +193,7 @@ export class ProductsController {
   @ApiResponse({ status: 200, description: 'Image deleted successfully' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 404, description: 'Image not found' })
-  async removeImage(@Param('imageId', ParseIntPipe) imageId: number) {
+  async removeImage(@Param('imageId', ParseUUIDPipe) imageId: string) {
     return this.productsService.deleteImage(imageId);
   }
 
@@ -216,7 +216,7 @@ export class ProductsController {
   @ApiResponse({ status: 200, description: 'Product removed from weekly list' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 404, description: 'Weekly product not found' })
-  async removeWeeklyProduct(@Param('id', ParseIntPipe) id: number) {
+  async removeWeeklyProduct(@Param('id', ParseUUIDPipe) id: string) {
     return this.productsService.deleteWeeklyProduct(id);
   }
 }

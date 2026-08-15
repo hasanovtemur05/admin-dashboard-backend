@@ -18,7 +18,7 @@ export class SearchService {
       offset?: number;
       filters?: string[];
       sort?: string[];
-      userId?: number;
+      userId?: string;
     },
   ) {
     const result = await this.meilisearchService.search(
@@ -61,7 +61,7 @@ export class SearchService {
     return this.searchRepository.getPopularSearches(limit);
   }
 
-  async getRecentSearches(userId: number, limit: number = 10) {
+  async getRecentSearches(userId: string, limit: number = 10) {
     return this.searchRepository.getRecentSearches(userId, limit);
   }
 

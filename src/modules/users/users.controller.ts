@@ -7,7 +7,7 @@ import {
   Put,
   Body,
   Delete,
-  ParseIntPipe,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -58,7 +58,7 @@ export class UsersController {
     description: 'Forbidden - insufficient permissions',
   })
   @ApiResponse({ status: 404, description: 'User not found' })
-  async findOne(@Param('id', ParseIntPipe) id: number) {
+  async findOne(@Param('id', ParseUUIDPipe) id: string) {
     return this.usersService.findById(id);
   }
 
@@ -75,7 +75,7 @@ export class UsersController {
     description: 'Forbidden - insufficient permissions',
   })
   @ApiResponse({ status: 404, description: 'User not found' })
-  async update(@Param('id', ParseIntPipe) id: number, @Body() data: any) {
+  async update(@Param('id', ParseUUIDPipe) id: string, @Body() data: any) {
     return this.usersService.update(id, data);
   }
 
@@ -91,7 +91,7 @@ export class UsersController {
     description: 'Forbidden - insufficient permissions',
   })
   @ApiResponse({ status: 404, description: 'User not found' })
-  async remove(@Param('id', ParseIntPipe) id: number) {
+  async remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.usersService.softDelete(id);
   }
 }

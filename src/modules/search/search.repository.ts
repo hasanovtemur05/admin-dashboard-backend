@@ -7,7 +7,7 @@ export class SearchRepository {
 
   async logSearch(
     query: string,
-    userId?: number,
+    userId?: string,
     resultsCount?: number,
     filters?: any,
   ) {
@@ -35,7 +35,7 @@ export class SearchRepository {
     }));
   }
 
-  async getRecentSearches(userId: number, limit: number = 10) {
+  async getRecentSearches(userId: string, limit: number = 10) {
     return this.prismaRepository.prisma.searchLog.findMany({
       where: { userId },
       orderBy: { createdAt: 'desc' },

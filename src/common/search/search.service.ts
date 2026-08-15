@@ -72,7 +72,7 @@ export class SearchService {
     }
   }
 
-  async deleteDocument(indexName: string, documentId: number): Promise<void> {
+  async deleteDocument(indexName: string, documentId: string): Promise<void> {
     try {
       await fetch(`${this.host}/indexes/${indexName}/documents/${documentId}`, {
         method: 'DELETE',

@@ -7,7 +7,7 @@ import {
   Body,
   Param,
   Query,
-  ParseIntPipe,
+  ParseUUIDPipe,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -67,7 +67,7 @@ export class BannersController {
   @ApiOperation({ summary: 'Get banner by ID' })
   @ApiResponse({ status: 200, description: 'Banner retrieved successfully' })
   @ApiResponse({ status: 404, description: 'Banner not found' })
-  async findById(@Param('id', ParseIntPipe) id: number) {
+  async findById(@Param('id', ParseUUIDPipe) id: string) {
     return this.bannersService.findById(id);
   }
 
@@ -101,7 +101,7 @@ export class BannersController {
   })
   @ApiResponse({ status: 404, description: 'Banner not found' })
   async update(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id', ParseUUIDPipe) id: string,
     @Body() updateBannerDto: UpdateBannerDto,
   ) {
     return this.bannersService.update(id, updateBannerDto);
@@ -119,7 +119,7 @@ export class BannersController {
     description: 'Forbidden - insufficient permissions',
   })
   @ApiResponse({ status: 404, description: 'Banner not found' })
-  async remove(@Param('id', ParseIntPipe) id: number) {
+  async remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.bannersService.softDelete(id);
   }
 }

@@ -104,13 +104,13 @@ export class CreateProductDto {
   basePrice: number;
 
   @ApiProperty({ example: 1 })
-  @IsNumber()
-  categoryId: number;
+  @IsString()
+  categoryId: string;
 
   @ApiPropertyOptional({ example: 1 })
-  @IsNumber()
+  @IsString()
   @IsOptional()
-  brandId?: number;
+  brandId?: string;
 
   @ApiPropertyOptional({ default: true })
   @IsBoolean()
