@@ -89,51 +89,54 @@ After seeding, the following users are available:
 
 | Role | Phone | Password |
 |------|-------|----------|
-| Super Admin | +998901234567 | admin123 |
-| Content Manager | +998901234568 | cm123456 |
+| Admin | +998901234567 | admin123 |
+| User | +998901234568 | user123456 |
 
-## API Endpoints
+## Roles
 
-### Public Endpoints
+- **ADMIN**: Full access to all endpoints
+- **USER**: Regular user access
 
-- `GET /api/categories` - Get category tree
-- `GET /api/categories/:id/products` - Get products by category
-- `GET /api/products` - Get all products
-- `GET /api/products/weekly` - Get weekly products
-- `GET /api/banners` - Get active banners
-- `GET /api/search?q=...` - Search products
+## Git Workflow
 
-### Admin Endpoints (Requires JWT)
-
-- `POST /api/auth/login` - Login
-- `POST /api/auth/register` - Register
-- `POST /api/admin/products` - Create product
-- `PUT /api/admin/products/:id` - Update product
-- `DELETE /api/admin/products/:id` - Delete product
-- `POST /api/admin/categories` - Create category
-- `POST /api/admin/banners` - Create banner
-- `GET /api/admin/orders` - Get all orders
-- `PATCH /api/admin/orders/:id/status` - Update order status
-
-## Development
-
-### Running Tests
+### Development
 
 ```bash
-npm run test
+git checkout dev
+# Make changes
+git add .
+git commit -m "feat: your feature"
+git push origin dev
 ```
 
-### Linting
+### Production Deployment
 
 ```bash
-npm run lint
+git checkout main
+git merge dev
+git push origin main
 ```
 
-### Database Studio
+Pushing to `main` triggers automatic deployment on Render.
 
-```bash
-npm run prisma:studio
-```
+## Deployment (Render)
+
+### Environment Variables
+
+Set these in Render Dashboard:
+
+| Variable | Description |
+|----------|-------------|
+| `DATABASE_URL` | PostgreSQL connection string |
+| `JWT_SECRET` | Secret key for JWT tokens |
+| `CORS_ORIGIN` | Allowed origins (e.g., `*` or your frontend URL) |
+
+### Automatic Deployment
+
+- **Production Branch**: `main`
+- **Auto Deploy**: Enabled
+- **Build Command**: `npm install && npx prisma generate && npm run build`
+- **Start Command**: `npx prisma migrate deploy && npm run start:prod`
 
 ## Project Structure
 
@@ -159,6 +162,26 @@ src/
     ├── roles/           # User roles
     ├── search/          # Search functionality
     └── users/           # User management
+```
+
+## Development
+
+### Running Tests
+
+```bash
+npm run test
+```
+
+### Linting
+
+```bash
+npm run lint
+```
+
+### Database Studio
+
+```bash
+npm run prisma:studio
 ```
 
 ## License

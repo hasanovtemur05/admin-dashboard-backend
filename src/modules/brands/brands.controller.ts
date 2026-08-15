@@ -53,7 +53,7 @@ export class BrandsController {
 
   @Post()
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(UserRole.SUPER_ADMIN, UserRole.CONTENT_MANAGER)
+  @Roles(UserRole.ADMIN)
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Create brand' })
   @ApiResponse({ status: 201, description: 'Brand created successfully' })
@@ -69,7 +69,7 @@ export class BrandsController {
 
   @Put(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(UserRole.SUPER_ADMIN, UserRole.CONTENT_MANAGER)
+  @Roles(UserRole.ADMIN)
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Update brand' })
   @ApiResponse({ status: 200, description: 'Brand updated successfully' })
@@ -89,7 +89,7 @@ export class BrandsController {
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(UserRole.SUPER_ADMIN)
+  @Roles(UserRole.ADMIN)
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Delete brand (soft delete)' })
   @ApiResponse({ status: 200, description: 'Brand deleted successfully' })

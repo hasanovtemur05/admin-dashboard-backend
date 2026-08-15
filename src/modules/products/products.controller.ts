@@ -84,7 +84,7 @@ export class ProductsController {
 
   @Post()
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(UserRole.SUPER_ADMIN, UserRole.CONTENT_MANAGER)
+  @Roles(UserRole.ADMIN)
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Create product' })
   @ApiResponse({ status: 201, description: 'Product created successfully' })
@@ -100,7 +100,7 @@ export class ProductsController {
 
   @Put(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(UserRole.SUPER_ADMIN, UserRole.CONTENT_MANAGER)
+  @Roles(UserRole.ADMIN)
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Update product' })
   @ApiResponse({ status: 200, description: 'Product updated successfully' })
@@ -120,7 +120,7 @@ export class ProductsController {
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(UserRole.SUPER_ADMIN)
+  @Roles(UserRole.ADMIN)
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Delete product (soft delete)' })
   @ApiResponse({ status: 200, description: 'Product deleted successfully' })
@@ -136,7 +136,7 @@ export class ProductsController {
 
   @Post(':id/variants')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(UserRole.SUPER_ADMIN, UserRole.CONTENT_MANAGER)
+  @Roles(UserRole.ADMIN)
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Add product variant' })
   @ApiResponse({ status: 201, description: 'Variant added successfully' })
@@ -148,7 +148,7 @@ export class ProductsController {
 
   @Put('variants/:variantId')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(UserRole.SUPER_ADMIN, UserRole.CONTENT_MANAGER)
+  @Roles(UserRole.ADMIN)
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Update product variant' })
   @ApiResponse({ status: 200, description: 'Variant updated successfully' })
@@ -163,7 +163,7 @@ export class ProductsController {
 
   @Delete('variants/:variantId')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(UserRole.SUPER_ADMIN)
+  @Roles(UserRole.ADMIN)
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Delete product variant' })
   @ApiResponse({ status: 200, description: 'Variant deleted successfully' })
@@ -175,7 +175,7 @@ export class ProductsController {
 
   @Post(':id/images')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(UserRole.SUPER_ADMIN, UserRole.CONTENT_MANAGER)
+  @Roles(UserRole.ADMIN)
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Add product image' })
   @ApiResponse({ status: 201, description: 'Image added successfully' })
@@ -187,7 +187,7 @@ export class ProductsController {
 
   @Delete('images/:imageId')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(UserRole.SUPER_ADMIN)
+  @Roles(UserRole.ADMIN)
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Delete product image' })
   @ApiResponse({ status: 200, description: 'Image deleted successfully' })
@@ -199,7 +199,7 @@ export class ProductsController {
 
   @Post('weekly')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(UserRole.SUPER_ADMIN, UserRole.CONTENT_MANAGER)
+  @Roles(UserRole.ADMIN)
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Add product to weekly products' })
   @ApiResponse({ status: 201, description: 'Product added to weekly list' })
@@ -210,7 +210,7 @@ export class ProductsController {
 
   @Delete('weekly/:id')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(UserRole.SUPER_ADMIN)
+  @Roles(UserRole.ADMIN)
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Remove from weekly products' })
   @ApiResponse({ status: 200, description: 'Product removed from weekly list' })

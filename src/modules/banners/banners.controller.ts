@@ -47,7 +47,7 @@ export class BannersController {
 
   @Get('admin')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(UserRole.SUPER_ADMIN, UserRole.CONTENT_MANAGER)
+  @Roles(UserRole.ADMIN)
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Get all banners (admin)' })
   @ApiResponse({
@@ -73,7 +73,7 @@ export class BannersController {
 
   @Post()
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(UserRole.SUPER_ADMIN, UserRole.CONTENT_MANAGER)
+  @Roles(UserRole.ADMIN)
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Create banner' })
   @ApiResponse({ status: 201, description: 'Banner created successfully' })
@@ -89,7 +89,7 @@ export class BannersController {
 
   @Put(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(UserRole.SUPER_ADMIN, UserRole.CONTENT_MANAGER)
+  @Roles(UserRole.ADMIN)
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Update banner' })
   @ApiResponse({ status: 200, description: 'Banner updated successfully' })
@@ -109,7 +109,7 @@ export class BannersController {
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(UserRole.SUPER_ADMIN)
+  @Roles(UserRole.ADMIN)
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Delete banner (soft delete)' })
   @ApiResponse({ status: 200, description: 'Banner deleted successfully' })

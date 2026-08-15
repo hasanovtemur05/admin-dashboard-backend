@@ -18,7 +18,7 @@ export class RolesController {
 
   @Get()
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @RolesDecorator(UserRole.SUPER_ADMIN)
+  @RolesDecorator(UserRole.ADMIN)
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Get all roles' })
   @ApiResponse({ status: 200, description: 'Roles retrieved successfully' })
@@ -33,7 +33,7 @@ export class RolesController {
 
   @Get(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @RolesDecorator(UserRole.SUPER_ADMIN)
+  @RolesDecorator(UserRole.ADMIN)
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Get role by ID' })
   @ApiResponse({ status: 200, description: 'Role retrieved successfully' })
