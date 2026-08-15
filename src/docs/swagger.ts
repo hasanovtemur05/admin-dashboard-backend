@@ -64,7 +64,7 @@ All admin endpoints require JWT token. Use \`/api/auth/login\` to get access tok
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api/docs', app, document, {
+  SwaggerModule.setup('docs', app, document, {
     swaggerOptions: {
       persistAuthorization: true,
       docExpansion: 'none',
