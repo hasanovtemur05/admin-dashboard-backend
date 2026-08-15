@@ -16,7 +16,10 @@ services:
         value: production
 
       - key: DATABASE_URL
-        sync: false
+        value: postgresql://postgres.hwbkcjddmazmjlhkqipx:nXZm4%246czke%2FC7r@aws-0-ap-southeast-1.pooler.supabase.com:5432/postgres
+
+      - key: DIRECT_URL
+        value: postgresql://postgres.hwbkcjddmazmjlhkqipx:nXZm4%246czke%2FC7r@aws-0-ap-southeast-1.pooler.supabase.com:5432/postgres
 
       - key: JWT_SECRET
         generateValue: true
@@ -28,6 +31,6 @@ services:
         value: 7d
 
       - key: CORS_ORIGIN
-        sync: false
+        value: "*"
 
     healthCheckPath: /api/health
