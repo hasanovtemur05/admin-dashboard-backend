@@ -28,8 +28,8 @@ export class RolesGuard {
       throw new ForbiddenException('User not authenticated');
     }
 
-    // Super admin has access to everything
-    if (user.role === UserRole.SUPER_ADMIN) {
+    // Admin has access to everything
+    if (user.role === UserRole.ADMIN) {
       return true;
     }
 

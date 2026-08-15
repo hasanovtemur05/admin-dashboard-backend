@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('Seeding database...');
 
-  // Create super admin user
+  // Create admin user
   const hashedPassword = await bcrypt.hash('admin123', 12);
   
   const admin = await prisma.user.upsert({
@@ -16,28 +16,28 @@ async function main() {
       phone: '+998901234567',
       email: 'admin@market.uz',
       password: hashedPassword,
-      name: 'Super Admin',
-      role: UserRole.SUPER_ADMIN,
+      name: 'Admin',
+      role: UserRole.ADMIN,
     },
   });
 
   console.log('Created admin user:', admin.phone);
 
-  // Create content manager
-  const cmPassword = await bcrypt.hash('cm123456', 12);
-  const contentManager = await prisma.user.upsert({
+  // Create regular user
+  const userPassword = await bcrypt.hash('user123456', 12);
+  const user = await prisma.user.upsert({
     where: { phone: '+998901234568' },
     update: {},
     create: {
       phone: '+998901234568',
-      email: 'cm@market.uz',
-      password: cmPassword,
-      name: 'Content Manager',
-      role: UserRole.CONTENT_MANAGER,
+      email: 'user@market.uz',
+      password: userPassword,
+      name: 'Regular User',
+      role: UserRole.USER,
     },
   });
 
-  console.log('Created content manager:', contentManager.phone);
+  console.log('Created regular user:', user.phone);
 
   // Create categories
   const electronics = await prisma.category.upsert({

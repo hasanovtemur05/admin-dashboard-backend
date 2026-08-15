@@ -29,9 +29,8 @@ Uzum Market-like e-commerce platform backend.
 All admin endpoints require JWT token. Use \`/api/auth/login\` to get access token.
 
 ## Roles
-- \`SUPER_ADMIN\` - Full access to all endpoints
-- \`CONTENT_MANAGER\` - Manage products, categories, banners
-- \`MODERATOR\` - View orders, manage limited content
+- \`ADMIN\` - Full access to all endpoints
+- \`USER\` - Regular user access
         `,
     )
     .setVersion('1.0')

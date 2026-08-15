@@ -7,9 +7,8 @@ export class RolesRepository {
 
   findAll() {
     return [
-      { id: 1, name: 'SUPER_ADMIN', description: 'Full access' },
-      { id: 2, name: 'CONTENT_MANAGER', description: 'Manage content' },
-      { id: 3, name: 'MODERATOR', description: 'Limited access' },
+      { id: 1, name: 'ADMIN', description: 'Full access to all endpoints' },
+      { id: 2, name: 'USER', description: 'Regular user access' },
     ];
   }
 

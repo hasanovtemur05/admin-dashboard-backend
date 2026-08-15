@@ -19,7 +19,7 @@ export class DashboardController {
 
   @Get('summary')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(UserRole.SUPER_ADMIN, UserRole.CONTENT_MANAGER)
+  @Roles(UserRole.ADMIN)
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Get dashboard summary statistics' })
   @ApiResponse({

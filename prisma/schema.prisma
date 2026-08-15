@@ -8,9 +8,8 @@ datasource db {
 }
 
 enum UserRole {
-  SUPER_ADMIN
-  CONTENT_MANAGER
-  MODERATOR
+  USER
+  ADMIN
 }
 
 enum DiscountType {
@@ -33,7 +32,7 @@ model User {
   email     String?  @unique
   password  String
   name      String?
-  role      UserRole @default(MODERATOR)
+  role      UserRole @default(USER)
   isActive  Boolean  @default(true)
   orders    Order[]
   reviews   Review[]
